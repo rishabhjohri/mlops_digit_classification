@@ -49,3 +49,5 @@ for test_size in test_sizes:
 
         print("test_size={:.2f} dev_size={:.2f} train_size={:.2f} train_acc={:.2f} dev_acc={:.2f} test_acc={:.2f}".format(test_size, dev_size, train_size, train_acc, dev_acc, test_acc))
 
+print("Total number of sample (For quiz1)",len(X))
+print(X.shape)
