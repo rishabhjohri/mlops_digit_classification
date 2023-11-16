@@ -1,12 +1,7 @@
-# FROM ubuntu:23.10
-FROM python:3.9.17
-# copy the whole code directory
-COPY . /digits/
-# RUN apt-get update
-# RUN apt-get install -y python3 python3-pip
-RUN pip3 install -r /digits/requirements.txt
-# need python
-# no need for conda or venv
-WORKDIR /digits
-# requirements installation
-CMD ["pytest"]
+# FROM ubuntu:latest
+FROM python:3.8.1
+COPY mlops /exp/mlops
+COPY ./requirements.txt /exp/requirements.txt
+RUN pip3 install --no-cache-dir -r /exp/requirements.txt
+WORKDIR /exp
+CMD ["python3", "./mlops/plot_graphs.py"]
