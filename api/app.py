@@ -1,33 +1,31 @@
-from flask import Flask
-from flask import request
+from flask import Flask, request
 from joblib import load
 
 app = Flask(__name__)
-model_path = "svm_gamma=0.0005_C=2.joblib"
-model = load(model_path)
+
+# Models dictionary to store loaded models
+models = {}
+
+def load_model():
+    models['svm'] = load("svm_model_path.joblib")  # Replace with your actual SVM model path
+    models['lr'] = load("lr_model_path.joblib")  # Replace with your actual LR model path
+    models['tree'] = load("tree_model_path.joblib")  # Replace with your actual Decision Tree model path
+
+# Load models
+load_model()
 
 @app.route("/")
 def hello_world():
-    return "<!-- hello --> <b> Hello, World!</b>"
+    return "<b>Hello, World!</b>"
 
+@app.route("/predict/<model_type>", methods=['POST'])
+def predict_digit(model_type):
+    if model_type not in models:
+        return {"error": "Model not found"}, 404
 
-# get x and y somehow    
-#     - query parameter
-#     - get call / methods
-#     - post call / methods ** 
-
-@app.route("/sum", methods=['POST'])
-def sum():
-    x = request.json['x']
-    y = request.json['y']
-    z = x + y 
-    return {'sum':z}
-
-
-
-@app.route("/predict", methods=['POST'])
-def predict_digit():
     image = request.json['image']
-    print("done loading")
-    predicted = model.predict([image])
-    return {"y_predicted":int(predicted[0])}
+    predicted = models[model_type].predict([image])
+    return {"y_predicted": int(predicted[0])}
+
+if __name__ == "__main__":
+    app.run(debug=True)
